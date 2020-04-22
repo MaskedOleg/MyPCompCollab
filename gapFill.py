@@ -27,6 +27,7 @@ for items in textFiles:
             while newpos != pos + 1:
                 newpos = newpos - 1
             counter = 0
+            textFiles.remove(items)
         else:
             continue
 
