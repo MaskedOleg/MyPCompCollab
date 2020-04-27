@@ -2,7 +2,7 @@
 #define LIMIT 999
 
 int getline(char str[], int size);
-char uncomment(char str[], char new_str[]);
+void uncomment(char str[], char new_str[]);
 
 main() {
 	char line[LIMIT];	/* Input array of characters */
@@ -24,36 +24,35 @@ int getline(char str[], int size) {
 	for( i = 0 ; i < size - 1 && (c=getchar()) != EOF && c != '\n' ; ++i )
 		str[i] = c;
 	if( c == '\n' )
-		str[i] == '\n';
+		str[i] = '\n';
 	++i;
 	str[i] = '\0';
 
 	return i;
 }
 
-char uncomment(char str[], char new_str[]) {
-	int i, j;
-	int slash, asterisk;
+void uncomment(char str[], char new_str[]) {
+	int i, j, k, l, m;
 
 	i = 0;
-	slash = 0;
-	asterisk = 0;
+	k = 1;
 
-	while ( str[i] != EOF )
+	while ( str[i] != '\n' )
 		++i;	/* Gets size of array */
-
 	for ( j = 0; j < i; ++j ) {
-		if (str[j] == '/')
-			++slash;
-		else if (str[j] == '*')
-			++ asterisk;
-		else {
-			slash = 0;
-			asterisk = 0;
+		if (str[j] == '/' && str[k] == '*') {
+			l = k + 1;
+			m = l + 1;
+			while( str[l] != '*' && str[m] != '/' ) {
+				printf("Skipping %c\n", str[l]);
+				++l;
+				++m;
+			}	 
+			j = k = m;
+			printf("Removed Comments\n");
 		}
-		if (slash >= 1 && asterisk >= 1)
-			;
 		else
 			new_str[j] = str[j];
+		++k;
 	}
 }
