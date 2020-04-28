@@ -37,10 +37,10 @@ void uncomment(char str[], char new_str[]) {
 	i = 0;
 	k = 1;
 
-	while ( str[i] != '\n' )
+	while ( str[i] != '\0' )
 		++i;	/* Gets size of array */
 	for ( j = 0; j < i; ++j ) {
-		if (str[j] == '/' && str[k] == '*') {
+		if ((str[j] == '/') && (str[k] == '*')) {
 			l = k + 1;
 			m = l + 1;
 			while( str[l] != '*' && str[m] != '/' ) {
@@ -48,11 +48,16 @@ void uncomment(char str[], char new_str[]) {
 				++l;
 				++m;
 			}	 
-			j = k = m;
+			j = l;
+			k = m;
 			printf("Removed Comments\n");
 		}
-		else
+		else {
 			new_str[j] = str[j];
-		++k;
+			printf("Copying: %c\n", new_str[j]);
+		}
+		if ( k < i )
+			++k;
+		printf("j = %d, k = %d\n", j, k); 
 	}
 }
