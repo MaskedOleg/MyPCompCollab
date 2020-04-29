@@ -32,32 +32,29 @@ int getline(char str[], int size) {
 }
 
 void uncomment(char str[], char new_str[]) {
-	int i, j, k, l, m;
+	int i, j, k;
+	int hold;
+	
+	j = 0;
+	k = 0;
 
-	i = 0;
-	k = 1;
-
-	while ( str[i] != '\0' )
-		++i;	/* Gets size of array */
-	for ( j = 0; j < i; ++j ) {
-		if ((str[j] == '/') && (str[k] == '*')) {
-			l = k + 1;
-			m = l + 1;
-			while( str[l] != '*' && str[m] != '/' ) {
-				printf("Skipping %c\n", str[l]);
-				++l;
-				++m;
-			}	 
-			j = l;
-			k = m;
-			printf("Removed Comments\n");
+	for ( i = 0; str[i] != '\0'; ++i ) {
+		if( str[hold] == '/' && str[i] == '*') {
+			j = 1;
+			k = i -1;
 		}
-		else {
-			new_str[j] = str[j];
-			printf("Copying: %c\n", new_str[j]);
+		else if ( str[hold] == '*' && str[i] == '/') {
+			j = 0;
+			++i;
 		}
-		if ( k < i )
+		if ( j == 0) {
+			new_str[k] = str[i];
+			printf("new_str[%d] = %c\t", k, new_str[k]);
 			++k;
-		printf("j = %d, k = %d\n", j, k); 
+		}
+		printf("hold[%d] = %c\tstr[%d] = %c\n", hold, str[hold], i, str[i]);
+		hold = i;
+		
 	}
+	new_str[i] = '\0';
 }
