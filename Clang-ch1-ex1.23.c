@@ -1,60 +1,70 @@
-#include<stdio.h>
-#define LIMIT 999
+#include <stdio.h>
 
-int getline(char str[], int size);
-void uncomment(char str[], char new_str[]);
+#define MAXLINE 1000	/* Maximum string length */
 
-main() {
-	char line[LIMIT];	/* Input array of characters */
-	char newline[LIMIT];	/* For no comment array of characters */
-	int len;
-	
-	printf("Enter a line with comments:\n");
-	len = getline(line, LIMIT);
-	printf("Line with comments:\n%s", line);	
-	uncomment(line, newline);
-	printf("Line without comments:\n%s", newline);
+int getline(char s[], int lim);
+int uncomment(char str[], char new_str[]);
+
+main() 
+{
+	int length;		/* current line length */
+	int new_length;		/* new line length */
+	char line[MAXLINE];	/* current input line */
+	char newline[MAXLINE];	/* altered input line */
+
+	printf("Enter a line:\n");
+
+	length = getline(line, MAXLINE);
+	printf("Original input:\n");
+	for (int i = 0; i < length; ++i)
+		printf("%c", line[i]);
+	new_length = uncomment(line, newline);
+	printf("No comment code output:\n");
+	for (int i = 0; i < new_length; ++i)
+		printf("%c", newline[i]);
 	
 }
 
-int getline(char str[], int size) {
-	char c;
-	int i;
+/* getline; read a line into s, return length */
+int getline(char s[], int lim)
+{
+	int c, i;
 
-	for( i = 0 ; i < size - 1 && (c=getchar()) != EOF && c != '\n' ; ++i )
-		str[i] = c;
-	if( c == '\n' )
-		str[i] = '\n';
-	++i;
-	str[i] = '\0';
-
+	for (i=0; i < lim-1 && (c=getchar())!=EOF && c!='\n'; ++i)
+		s[i] = c;
+	if (c == '\n') {
+		s[i] = c;
+		++i;
+	}
+	s[i] = '\0';
 	return i;
 }
 
-void uncomment(char str[], char new_str[]) {
+int uncomment(char str[], char new_str[]) {
 	int i, j, k;
 	int hold;
 	
 	j = 0;
 	k = 0;
-
+	hold = 0;
+	
 	for ( i = 0; str[i] != '\0'; ++i ) {
-		if( str[hold] == '/' && str[i] == '*') {
+		if( str[hold] == '/' && str[i] == '*' ) {
 			j = 1;
-			k = i -1;
+			k = k - 1;
 		}
-		else if ( str[hold] == '*' && str[i] == '/') {
+		else if ( str[hold] == '*' && str[i] == '/' ) {
 			j = 0;
 			++i;
 		}
-		if ( j == 0) {
+		if ( j == 0 ) {
 			new_str[k] = str[i];
 			printf("new_str[%d] = %c\t", k, new_str[k]);
 			++k;
 		}
 		printf("hold[%d] = %c\tstr[%d] = %c\n", hold, str[hold], i, str[i]);
 		hold = i;
-		
 	}
-	new_str[i] = '\0';
+	new_str[k] = '\0';
+	return k;
 }
