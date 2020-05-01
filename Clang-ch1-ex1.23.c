@@ -44,27 +44,28 @@ int uncomment(char str[], char new_str[]) {
 	int i, j, k;
 	int hold;
 	
+	/* Initialize variables */
 	j = 0;
 	k = 0;
 	hold = 0;
 	
 	for ( i = 0; str[i] != '\0'; ++i ) {
-		if( str[hold] == '/' && str[i] == '*' ) {
-			j = 1;
-			k = k - 1;
+		if( str[hold] == '/' && str[i] == '*' ) { 
+			/* Test for previous index(hold) and current index(i) 
+			if they signify the START of a comment*/
+			j = 1;	/* Counter to identify if array is now the start of a comment */
+			k = k - 1;	/* Goes back one index for new_str[] */
 		}
-		else if ( str[hold] == '*' && str[i] == '/' ) {
-			j = 0;
-			++i;
+		else if ( str[hold] == '*' && str[i] == '/' )
+			/* Test for previous index(hold) and current index(i) 
+			if they signify the END of a comment*/
+			j = 0;	/* Counter set to exist out of a comment */
+		else if ( j == 0 ) {	/* As long as Counter is 0, */
+			new_str[k] = str[i]; /* Assigns value of str[i] to new_str[k] */
+			++k;	/* Only increments if assignment is made */
 		}
-		if ( j == 0 ) {
-			new_str[k] = str[i];
-			printf("new_str[%d] = %c\t", k, new_str[k]);
-			++k;
-		}
-		printf("hold[%d] = %c\tstr[%d] = %c\n", hold, str[hold], i, str[i]);
-		hold = i;
+		hold = i; /* Assigns soon-to-be previous value of i; */
 	}
-	new_str[k] = '\0';
-	return k;
+	new_str[k] = '\0'; /* Adds a terminating symbol to array signifying END */
+	return k; /* returns total length of new_str[] */
 }
