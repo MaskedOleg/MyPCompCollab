@@ -3,7 +3,7 @@
 #define MAXLINE 1000	/* Maximum string length */
 
 int getline(char s[], int lim);
-int syncheck(char str[]);
+int syncheck(char str[], int len);
 
 main() 
 {
@@ -13,12 +13,10 @@ main()
 
 	printf("Enter a line:\n");
 	length = getline(line, MAXLINE);
-	printf("Original input:\n");
-	for (i = 0; i < length; ++i)
-		printf("%c", line[i]);
 	printf("Syntax Error:\n");
-	syncheck(line);
-	
+	syncheck(line, length);
+
+	return 0;
 }
 
 /* getline; read a line into s, return length */
@@ -37,10 +35,10 @@ int getline(char s[], int lim)
 }
 
 /* syncheck: checks for rudimentary syntax errors */
-int syncheck(char str[])
+int syncheck(char str[], int len)
 {
 	int a, b;
-	int r_pths, l_pths, r_brkt, l_brkt, r_brcs, l_brcs, sq, dq, sc;
+	int r_pths, l_pths, r_brkt, l_brkt, r_brcs, l_brcs, sq, dq;
 	
 	r_pths = 0;
 	l_pths = 0;
@@ -48,11 +46,10 @@ int syncheck(char str[])
 	l_brkt = 0;
 	r_brcs = 0;
 	l_brcs = 0;
-	sq = 0;
 	dq = 0;
-	sc = 0;
+	sq = 0;
 
-	for ( a = 0; str[a] != EOF; ++a ) {
+	for ( a = 0; a < len; ++a ) {
 		if ( str[a] == '(' )
 			++r_pths;
 		else if ( str[a] == ')' )
@@ -65,15 +62,14 @@ int syncheck(char str[])
 			++r_brcs;
 		else if ( str[a] == '}' )
 			++l_brcs;
-		else if ( str[a] == 59 )
-			++sc;
 		else if ( str[a] == 39 )
 			++sq;
 		else if ( str[a] == 34 )
 			++dq;
 	}
-
-	if ( r_pths != l_pths ) {
+	if ( dq % 2 != 0 )
+		printf("Line has unequal number of double quotes");
+	else if ( r_pths != l_pths ) {
 		printf("Line has unequal number of parentheses. ");
 		if ( r_pths > l_pths )
 			printf("Supply an additional ')' to close the line.");
@@ -94,4 +90,10 @@ int syncheck(char str[])
 		else if ( r_brcs < l_brcs )
 			printf("Supply an additional '{' to close the line.");
 	}
+	else if ( sq % 2 != 0 )
+		printf("Line has unequal number of single quotes");
+	else if ( str[a-2] != 59 )
+		printf("Line must terminate with a semi-colon. Add a ';' at the end of the line.");
+	else
+		printf("No Syntax Errors.");
 }
