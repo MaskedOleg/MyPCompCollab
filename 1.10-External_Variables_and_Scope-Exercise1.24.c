@@ -38,8 +38,9 @@ int getline(char s[], int lim)
 int syncheck(char str[], int len)
 {
 	int a, b;
-	int r_pths, l_pths, r_brkt, l_brkt, r_brcs, l_brcs, sq, dq;
+	int r_pths, l_pths, r_brkt, l_brkt, r_brcs, l_brcs, sq, dq, cmt;
 	
+	b = 0;
 	r_pths = 0;
 	l_pths = 0;
 	r_brkt = 0;
@@ -48,6 +49,7 @@ int syncheck(char str[], int len)
 	l_brcs = 0;
 	dq = 0;
 	sq = 0;
+	cmt = 0;
 
 	for ( a = 0; a < len; ++a ) {
 		if ( str[a] == '(' )
@@ -66,9 +68,27 @@ int syncheck(char str[], int len)
 			++sq;
 		else if ( str[a] == 34 )
 			++dq;
+		else if ( str[a] == '/' ) {
+			if ( (cmt > 0) && (str[a-1] == '*') )
+				++cmt;
+			else if ( (cmt == 0 ) && (str[a+1] == '*') ) {
+				++cmt;
+				b = a;
+				while ( str[b] != 59 )	/* finds last semi-colon index before comment start */
+					--b;
+			}
+		}
 	}
+
+	if ( b > 0 )
+		a = b + 2;	/* sets last semi-colon index */
+	else
+		;
+
 	if ( dq % 2 != 0 )
 		printf("Line has unequal number of double quotes");
+	else if ( cmt % 2 != 0 )
+		printf("Line has unequal number of comment tag");
 	else if ( r_pths != l_pths ) {
 		printf("Line has unequal number of parentheses. ");
 		if ( r_pths > l_pths )
@@ -95,5 +115,5 @@ int syncheck(char str[], int len)
 	else if ( str[a-2] != 59 )
 		printf("Line must terminate with a semi-colon. Add a ';' at the end of the line.");
 	else
-		printf("No Syntax Errors.");
+		printf("\n--No Syntax Errors.--");
 }
