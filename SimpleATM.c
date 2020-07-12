@@ -61,7 +61,7 @@ int getline ( char s[], int lim )
 	char c;
 
 	for (i = 0; i < lim-1 && (c = getchar()) != EOF && c != '\n'; ++i)
-		s[i] = tolower(c);
+		s[i] = c;
 	if (c == '\n')
 		s[i++] = '\n';
 	s[i] = '\0';
@@ -73,7 +73,7 @@ int strcmp ( char s[], char t[] )
 {
 	int i, bool;
 	for ( i = bool = 0; t[i] != '\0'; ++i )
-		if ( s[i] != t[i] )	/* will cause undefined behavior */
+		if ( tolower(s[i]) != tolower(t[i]) )	/* will cause undefined behavior */
 			bool = 1;
 	if ( bool == 1 )
 		return bool;
